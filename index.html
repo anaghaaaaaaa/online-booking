@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EventEase | Discover Events. Create Memories.</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav-wrap">
+        <a href="index.html" class="brand">
+          <span class="brand-mark">E</span>
+          <span>EventEase</span>
+        </a>
+
+        <nav class="nav-links" aria-label="Main navigation">
+          <a class="active" href="index.html">Home</a>
+          <a href="explore.html">Explore Events</a>
+          <a href="#categories">Categories</a>
+          <a href="about.html">About</a>
+          <a href="login.html">Login</a>
+          <a href="register.html">Register</a>
+        </nav>
+
+        <div class="nav-actions">
+          <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+          <a href="login.html" class="btn btn-secondary">Login</a>
+          <a href="register.html" class="btn btn-primary">Register</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <span class="eyebrow">Curated experiences</span>
+            <h1>Discover Events. Create Memories.</h1>
+            <p>Find concerts, workshops, cultural nights, sports experiences, and premium community events tailored to your mood and schedule.</p>
+
+            <div class="hero-actions">
+              <a href="explore.html" class="btn btn-primary">Explore Events</a>
+              <a href="register.html" class="btn btn-soft">Organize an Event</a>
+            </div>
+
+            <form id="plannerSearch" class="search-panel">
+              <input id="eventKeyword" type="text" placeholder="Event name or keyword" />
+              <input id="eventLocation" type="text" placeholder="Location" />
+              <input id="eventDate" type="date" />
+              <button type="submit">Search</button>
+            </form>
+            <p id="searchStatus" class="form-note">Showing all available events for this weekend.</p>
+          </div>
+
+          <div class="hero-visual">
+            <div class="event-stack">
+              <div class="event-bubble bubble-one">
+                <strong>2.3k+</strong><br />
+                <span>Attendees</span>
+              </div>
+              <div class="event-bubble bubble-two">
+                <strong>120+</strong><br />
+                <span>Active events</span>
+              </div>
+
+              <div class="main-card">
+                <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80" alt="Crowd enjoying a live music event" />
+                <div class="event-meta">
+                  <div class="card-top">
+                    <span class="badge purple">Music Festival</span>
+                    <span class="meta">Nov 18, 2026</span>
+                  </div>
+                  <h3>Sunset Pulse Festival</h3>
+                  <p class="meta">Phoenix Green Arena • Mumbai</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="categories" class="section">
+        <div class="container">
+          <div class="section-header">
+            <h2>Explore by category</h2>
+            <p>Discover events that match your interests.</p>
+          </div>
+
+          <div class="categories-grid">
+            <div class="category-card">
+              <div class="category-icon">🎵</div>
+              <h3>Music</h3>
+              <p>Concerts, festivals, DJs</p>
+            </div>
+            <div class="category-card">
+              <div class="category-icon">💼</div>
+              <h3>Business</h3>
+              <p>Conferences and networking</p>
+            </div>
+            <div class="category-card">
+              <div class="category-icon">🎨</div>
+              <h3>Art</h3>
+              <p>Exhibitions and live shows</p>
+            </div>
+            <div class="category-card">
+              <div class="category-icon">⚽</div>
+              <h3>Sports</h3>
+              <p>Tournaments and matches</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" style="background:#fff;">
+        <div class="container">
+          <div class="section-header">
+            <h2>Featured events</h2>
+            <a href="explore.html" class="btn btn-soft">View all</a>
+          </div>
+
+          <div class="events-grid">
+            <article class="event-card">
+              <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=900&q=80" alt="Tech summit" />
+              <div class="body">
+                <div class="card-top">
+                  <span class="badge purple">Tech</span>
+                  <span class="meta">Limited seats</span>
+                </div>
+                <h3>Future of AI Summit</h3>
+                <p class="meta">Nov 16 • Bangalore • ₹1,499</p>
+                <div class="price-row">
+                  <div class="price">₹1,499</div>
+                  <a href="event-details.html" class="btn btn-primary small-btn">View details</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="event-card">
+              <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=900&q=80" alt="Concert" />
+              <div class="body">
+                <div class="card-top">
+                  <span class="badge green">Music</span>
+                  <span class="meta">Open air</span>
+                </div>
+                <h3>Neon Nights Live</h3>
+                <p class="meta">Nov 18 • Hyderabad • ₹2,999</p>
+                <div class="price-row">
+                  <div class="price">₹2,999</div>
+                  <a href="event-details.html" class="btn btn-primary small-btn">View details</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="event-card">
+              <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80" alt="Community workshop" />
+              <div class="body">
+                <div class="card-top">
+                  <span class="badge orange">Workshop</span>
+                  <span class="meta">Sold out</span>
+                </div>
+                <h3>Creative Design Bootcamp</h3>
+                <p class="meta">Nov 21 • Pune • ₹899</p>
+                <div class="price-row">
+                  <div class="price">₹899</div>
+                  <a href="event-details.html" class="btn btn-primary small-btn">View details</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="feature-copy">
+            <div class="section-header">
+              <h2>Ready to host your next big event?</h2>
+            </div>
+            <div class="feature-cta">
+              <a href="register.html" class="btn btn-primary">Create an account</a>
+              <a href="about.html" class="btn btn-soft">Learn more</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="brand" style="margin-bottom: 14px;">
+              <span class="brand-mark">E</span>
+              <span>EventEase</span>
+            </div>
+            <p>Helping people discover meaningful experiences, manage bookings, and host memorable events with ease.</p>
+          </div>
+
+          <div>
+            <h3>Explore</h3>
+            <ul class="footer-list">
+              <li><a href="explore.html">Explore Events</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Support</h3>
+            <ul class="footer-list">
+              <li>support@eventease.in</li>
+              <li>+91 98765 43210</li>
+              <li>Online 24/7</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Follow</h3>
+            <ul class="footer-list">
+              <li>Instagram</li>
+              <li>Facebook</li>
+              <li>LinkedIn</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">© 2026 EventEase. All rights reserved.</div>
+      </div>
+    </footer>
+
+    <script src="assets/script.js"></script>
+  </body>
+</html>

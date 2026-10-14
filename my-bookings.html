@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Bookings | EventEase</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav-wrap">
+        <a href="dashboard.html" class="brand"><span class="brand-mark">E</span><span>EventEase</span></a>
+        <nav class="nav-links" aria-label="User navigation">
+          <a href="dashboard.html">Dashboard</a>
+          <a href="book-event.html">Book Event</a>
+          <a class="active" href="my-bookings.html">My Bookings</a>
+          <a href="my-tickets.html">My Tickets</a>
+          <a href="my-profile.html">My Profile</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+          <a href="index.html" class="btn btn-secondary">Logout</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-hero">
+        <div class="container">
+          <div class="page-hero-inner">
+            <div>
+              <span class="eyebrow">Your reservations</span>
+              <h1>My Bookings</h1>
+              <p>Manage all bookings and upcoming event plans.</p>
+            </div>
+            <a href="book-event.html" class="btn btn-primary">Book another event</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="filter-box">
+            <input type="text" placeholder="Search bookings" />
+            <select>
+              <option>All statuses</option>
+              <option>Confirmed</option>
+              <option>Completed</option>
+              <option>Cancelled</option>
+            </select>
+            <input type="date" />
+            <select>
+              <option>Newest first</option>
+              <option>Oldest first</option>
+            </select>
+            <button class="btn btn-primary" style="padding:0.8rem 1rem;">Filter</button>
+          </div>
+
+          <div class="booking-list" style="margin-top:28px;">
+            <div class="booking-item">
+              <div class="top">
+                <h3>Sunset Pulse Festival</h3>
+                <span class="badge green">Confirmed</span>
+              </div>
+              <div class="booking-grid">
+                <div><strong>Ref:</strong> EV-24891</div>
+                <div><strong>Tickets:</strong> 2</div>
+                <div><strong>Date:</strong> Nov 18, 2026</div>
+                <div><strong>Amount:</strong> ₹5,998</div>
+              </div>
+              <div class="actions" style="margin-top:14px;">
+                <a href="booking-confirmation.html" class="btn btn-soft small-btn">View details</a>
+                <button class="btn btn-secondary small-btn">Cancel booking</button>
+              </div>
+            </div>
+
+            <div class="booking-item">
+              <div class="top">
+                <h3>Future of AI Summit</h3>
+                <span class="badge purple">Completed</span>
+              </div>
+              <div class="booking-grid">
+                <div><strong>Ref:</strong> EV-21244</div>
+                <div><strong>Tickets:</strong> 1</div>
+                <div><strong>Date:</strong> Nov 16, 2026</div>
+                <div><strong>Amount:</strong> ₹1,499</div>
+              </div>
+              <div class="actions" style="margin-top:14px;">
+                <a href="booking-confirmation.html" class="btn btn-soft small-btn">View details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="brand" style="margin-bottom:14px;"><span class="brand-mark">E</span><span>EventEase</span></div>
+            <p>Track every reservation, change, and ticket from one dashboard.</p>
+          </div>
+          <div>
+            <h3>Quick links</h3>
+            <ul class="footer-list">
+              <li><a href="dashboard.html">Dashboard</a></li>
+              <li><a href="my-tickets.html">My Tickets</a></li>
+              <li><a href="my-profile.html">My Profile</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Support</h3>
+            <ul class="footer-list">
+              <li>help@eventease.in</li>
+              <li>+91 90000 11111</li>
+              <li>Live chat</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Social</h3>
+            <ul class="footer-list">
+              <li>Instagram</li>
+              <li>Facebook</li>
+              <li>LinkedIn</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">© 2026 EventEase. All rights reserved.</div>
+      </div>
+    </footer>
+
+    <script src="assets/script.js"></script>
+  </body>
+</html>

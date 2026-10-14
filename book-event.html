@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Event | EventEase</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav-wrap">
+        <a href="dashboard.html" class="brand"><span class="brand-mark">E</span><span>EventEase</span></a>
+        <nav class="nav-links" aria-label="User navigation">
+          <a href="dashboard.html">Dashboard</a>
+          <a class="active" href="book-event.html">Book Event</a>
+          <a href="my-bookings.html">My Bookings</a>
+          <a href="my-tickets.html">My Tickets</a>
+          <a href="my-profile.html">My Profile</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+          <a href="index.html" class="btn btn-secondary">Logout</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-hero">
+        <div class="container">
+          <div class="page-hero-inner">
+            <div>
+              <span class="eyebrow">Book your seat</span>
+              <h1>Sunset Pulse Festival</h1>
+              <p>Select the number of tickets and confirm your reservation.</p>
+            </div>
+            <a href="dashboard.html" class="btn btn-soft">Back to dashboard</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container detail-layout">
+          <div class="detail-card">
+            <div class="detail-banner">
+              <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1400&q=80" alt="Festival venue" />
+            </div>
+            <div style="margin-top:20px;">
+              <h2>Event overview</h2>
+              <div class="detail-meta">
+                <span>Nov 18, 2026</span>
+                <span>7:00 PM</span>
+                <span>Phoenix Green Arena</span>
+              </div>
+            </div>
+          </div>
+
+          <aside class="booking-box">
+            <h3>Booking summary</h3>
+            <p class="muted">Ticket price per seat: <strong data-price-per-seat="2999">₹2,999</strong></p>
+
+            <div class="qty-row">
+              <button type="button" data-qty-action="-1">−</button>
+              <input id="ticketQty" type="number" min="1" value="2" />
+              <button type="button" data-qty-action="1">+</button>
+            </div>
+
+            <p class="muted">Remaining seats: <strong>156</strong></p>
+
+            <ul class="order-list">
+              <li><span>Seat quantity</span><strong>2</strong></li>
+              <li><span>Subtotal</span><strong data-total-price>₹5,998</strong></li>
+              <li><span>Service fee</span><strong>₹0</strong></li>
+              <li><span>Total</span><strong>₹5,998</strong></li>
+            </ul>
+
+            <div style="margin-top:20px;">
+              <a href="booking-confirmation.html" class="btn btn-primary" style="width:100%;">Confirm Booking</a>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="brand" style="margin-bottom:14px;"><span class="brand-mark">E</span><span>EventEase</span></div>
+            <p>Reserve seats and manage your experiences from one simple portal.</p>
+          </div>
+          <div>
+            <h3>Quick links</h3>
+            <ul class="footer-list">
+              <li><a href="dashboard.html">Dashboard</a></li>
+              <li><a href="my-bookings.html">My Bookings</a></li>
+              <li><a href="my-profile.html">My Profile</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Support</h3>
+            <ul class="footer-list">
+              <li>help@eventease.in</li>
+              <li>+91 90000 11111</li>
+              <li>Live support</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Social</h3>
+            <ul class="footer-list">
+              <li>Instagram</li>
+              <li>Facebook</li>
+              <li>LinkedIn</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">© 2026 EventEase. All rights reserved.</div>
+      </div>
+    </footer>
+
+    <script src="assets/script.js"></script>
+  </body>
+</html>

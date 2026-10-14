@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Profile | EventEase</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav-wrap">
+        <a href="dashboard.html" class="brand"><span class="brand-mark">E</span><span>EventEase</span></a>
+        <nav class="nav-links" aria-label="User navigation">
+          <a href="dashboard.html">Dashboard</a>
+          <a href="book-event.html">Book Event</a>
+          <a href="my-bookings.html">My Bookings</a>
+          <a href="my-tickets.html">My Tickets</a>
+          <a class="active" href="my-profile.html">My Profile</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+          <a href="index.html" class="btn btn-secondary">Logout</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-hero">
+        <div class="container">
+          <div class="page-hero-inner">
+            <div>
+              <span class="eyebrow">Profile settings</span>
+              <h1>My Profile</h1>
+              <p>Update your personal details and preferences.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container profile-grid">
+          <div class="profile-card">
+            <h3>Account overview</h3>
+            <p><strong>Name:</strong> Priya Sharma</p>
+            <p><strong>Email:</strong> priya@example.com</p>
+            <p><strong>Member since:</strong> Jan 2025</p>
+          </div>
+
+          <div class="profile-card">
+            <h3>Update profile</h3>
+            <form class="form-grid" data-result-text="Your profile has been updated successfully.">
+              <div class="field-inline">
+                <div class="field">
+                  <label for="profileName">Full name</label>
+                  <input id="profileName" type="text" value="Priya Sharma" />
+                </div>
+                <div class="field">
+                  <label for="profileEmail">Email</label>
+                  <input id="profileEmail" type="email" value="priya@example.com" />
+                </div>
+              </div>
+              <div class="field">
+                <label for="profilePassword">Change password</label>
+                <input id="profilePassword" type="password" placeholder="Enter new password" />
+              </div>
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="brand" style="margin-bottom:14px;"><span class="brand-mark">E</span><span>EventEase</span></div>
+            <p>Keep your account details secure and current.</p>
+          </div>
+          <div>
+            <h3>Quick links</h3>
+            <ul class="footer-list">
+              <li><a href="dashboard.html">Dashboard</a></li>
+              <li><a href="my-bookings.html">My Bookings</a></li>
+              <li><a href="my-tickets.html">My Tickets</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Support</h3>
+            <ul class="footer-list">
+              <li>help@eventease.in</li>
+              <li>+91 90000 11111</li>
+              <li>Profile support</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Social</h3>
+            <ul class="footer-list">
+              <li>Instagram</li>
+              <li>Facebook</li>
+              <li>LinkedIn</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">© 2026 EventEase. All rights reserved.</div>
+      </div>
+    </footer>
+
+    <script src="assets/script.js"></script>
+  </body>
+</html>

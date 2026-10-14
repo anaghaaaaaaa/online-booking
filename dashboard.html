@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard | EventEase</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav-wrap">
+        <a href="dashboard.html" class="brand"><span class="brand-mark">E</span><span>EventEase</span></a>
+        <nav class="nav-links" aria-label="User navigation">
+          <a class="active" href="dashboard.html">Dashboard</a>
+          <a href="book-event.html">Book Event</a>
+          <a href="my-bookings.html">My Bookings</a>
+          <a href="my-tickets.html">My Tickets</a>
+          <a href="my-profile.html">My Profile</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+          <a href="index.html" class="btn btn-secondary">Logout</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-hero">
+        <div class="container">
+          <div class="page-hero-inner">
+            <div>
+              <span class="eyebrow">Welcome back</span>
+              <h1>Hello, Priya!</h1>
+              <p>Your upcoming experiences and booking summary are ready.</p>
+            </div>
+            <a href="explore.html" class="btn btn-primary">Explore events</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="summary-grid">
+            <div class="dashboard-card">
+              <div class="icon">📘</div>
+              <strong>12</strong>
+              <span>Total Bookings</span>
+            </div>
+            <div class="dashboard-card">
+              <div class="icon">🎟️</div>
+              <strong>4</strong>
+              <span>Upcoming Events</span>
+            </div>
+            <div class="dashboard-card">
+              <div class="icon">✅</div>
+              <strong>7</strong>
+              <span>Completed Events</span>
+            </div>
+            <div class="dashboard-card">
+              <div class="icon">❌</div>
+              <strong>1</strong>
+              <span>Cancelled Bookings</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" style="padding-top:0;">
+        <div class="container dashboard-layout">
+          <div>
+            <div class="section-header">
+              <h2>Upcoming reminders</h2>
+            </div>
+            <div class="booking-list">
+              <div class="booking-item">
+                <div class="top">
+                  <h3>Sunset Pulse Festival</h3>
+                  <span class="badge purple">Confirmed</span>
+                </div>
+                <p class="muted">Nov 18, 2026 • 7:00 PM • Phoenix Green Arena</p>
+              </div>
+              <div class="booking-item">
+                <div class="top">
+                  <h3>Future of AI Summit</h3>
+                  <span class="badge green">Confirmed</span>
+                </div>
+                <p class="muted">Nov 16, 2026 • 9:30 AM • Bangalore</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="side-card">
+            <h3>Quick actions</h3>
+            <div class="form-grid">
+              <a href="explore.html" class="btn btn-primary">Explore Events</a>
+              <a href="my-bookings.html" class="btn btn-soft">My Bookings</a>
+              <a href="my-tickets.html" class="btn btn-soft">My Tickets</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="brand" style="margin-bottom:14px;"><span class="brand-mark">E</span><span>EventEase</span></div>
+            <p>Your complete space for event discovery, bookings, and ticket management.</p>
+          </div>
+          <div>
+            <h3>Quick links</h3>
+            <ul class="footer-list">
+              <li><a href="dashboard.html">Dashboard</a></li>
+              <li><a href="book-event.html">Book Event</a></li>
+              <li><a href="my-bookings.html">My Bookings</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Support</h3>
+            <ul class="footer-list">
+              <li>help@eventease.in</li>
+              <li>+91 90000 11111</li>
+              <li>Live support</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Social</h3>
+            <ul class="footer-list">
+              <li>Instagram</li>
+              <li>Facebook</li>
+              <li>X / Twitter</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">© 2026 EventEase. All rights reserved.</div>
+      </div>
+    </footer>
+
+    <script src="assets/script.js"></script>
+  </body>
+</html>

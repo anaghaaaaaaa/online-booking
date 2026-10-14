@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact | EventEase</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav-wrap">
+        <a href="index.html" class="brand"><span class="brand-mark">E</span><span>EventEase</span></a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="index.html">Home</a>
+          <a href="explore.html">Explore Events</a>
+          <a href="about.html">About</a>
+          <a class="active" href="contact.html">Contact</a>
+          <a href="login.html">Login</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+          <a href="login.html" class="btn btn-secondary">Login</a>
+          <a href="register.html" class="btn btn-primary">Register</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="auth-wrap">
+      <div class="auth-card">
+        <h2>Contact us</h2>
+        <p class="muted">Tell us about your event ideas or support needs.</p>
+        <form class="form-grid" data-result-text="Your message has been received. We’ll contact you soon.">
+          <div class="field">
+            <label for="contactName">Name</label>
+            <input id="contactName" type="text" required />
+          </div>
+          <div class="field">
+            <label for="contactEmail">Email</label>
+            <input id="contactEmail" type="email" required />
+          </div>
+          <div class="field">
+            <label for="contactMessage">Message</label>
+            <textarea id="contactMessage" rows="5" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="brand" style="margin-bottom: 14px;">
+              <span class="brand-mark">E</span>
+              <span>EventEase</span>
+            </div>
+            <p>Creating memorable experiences through seamless event discovery and booking.</p>
+          </div>
+          <div>
+            <h3>Explore</h3>
+            <ul class="footer-list">
+              <li><a href="explore.html">Explore Events</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Contact</h3>
+            <ul class="footer-list">
+              <li>support@eventease.in</li>
+              <li>+91 98765 43210</li>
+              <li>help@eventease.in</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Connect</h3>
+            <ul class="footer-list">
+              <li>Instagram</li>
+              <li>Facebook</li>
+              <li>Twitter</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">© 2026 EventEase. All rights reserved.</div>
+      </div>
+    </footer>
+    <script src="assets/script.js"></script>
+  </body>
+</html>
