@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const forms = document.querySelectorAll('form');
   forms.forEach((form) => {
     form.addEventListener('submit', (event) => {
+      if (form.id === 'loginForm' || form.id === 'organizerRequestForm') return;
       const submitButton = form.querySelector('button[type="submit"]');
       if (!submitButton) return;
       if (submitButton.dataset.confirmText) { 
@@ -78,5 +79,46 @@ document.addEventListener('DOMContentLoaded', () => {
         form.appendChild(helper);
       }
     });
+  });
+
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) {
+    loginForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+      const password = document.getElementById('loginPassword').value;
+      const message = document.getElementById('loginMessage');
+      if (email === 'organizer@eventease.com' && password === 'Organizer@123') {
+        localStorage.setItem('eventease.organizer.session', JSON.stringify({ id: 'organizer-demo', email, name: 'Avery Morgan', role: 'organizer' }));
+        window.location.href = 'organizer.html#/dashboard';
+        return;
+      }
+      if (email === 'admin@eventease.com' && password === 'Admin@123') {
+        localStorage.setItem('eventease.organizer.session', JSON.stringify({ id: 'eventease-admin', email, name: 'EventEase Admin', role: 'admin' }));
+        window.location.href = 'admin.html#/dashboard';
+        return;
+      }
+      const approvedOrganizer = JSON.parse(localStorage.getItem('eventease.organizer.users') || '[]').find((user) => user.email.toLowerCase() === email && user.role === 'organizer');
+      if (approvedOrganizer && password === approvedOrganizer.password) {
+        const profiles = JSON.parse(localStorage.getItem('eventease.organizer.profiles') || '{}');
+        const profile = profiles[approvedOrganizer.id] || {};
+        localStorage.setItem('eventease.organizer.session', JSON.stringify({ id: approvedOrganizer.id, email, name: profile.name || approvedOrganizer.name, role: 'organizer' }));
+        window.location.href = 'organizer.html#/dashboard';
+        return;
+      }
+      message.textContent = 'Email or password is incorrect. Use the organizer demo details below to open Organizer Studio.';
+    });
+  }
+
+  const organizerRequestForm = document.getElementById('organizerRequestForm');
+  organizerRequestForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!organizerRequestForm.reportValidity()) return;
+    const request = Object.fromEntries(new FormData(organizerRequestForm).entries());
+    const requests = JSON.parse(localStorage.getItem('eventease.organizer.requests') || '[]');
+    requests.push({ ...request, id: `request-${Date.now()}`, status: 'Pending', createdAt: new Date().toISOString() });
+    localStorage.setItem('eventease.organizer.requests', JSON.stringify(requests));
+    organizerRequestForm.reset();
+    document.getElementById('organizerRequestMessage').textContent = 'Request saved for admin review.';
   });
 });

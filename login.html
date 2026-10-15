@@ -29,7 +29,7 @@
         <h2>Welcome back</h2>
         <p class="muted">Login to continue booking your next event.</p>
 
-        <form class="form-grid" data-result-text="Login successful. Redirecting to your dashboard...">
+        <form id="loginForm" class="form-grid">
           <div class="field">
             <label for="loginEmail">Email address</label>
             <input id="loginEmail" type="email" placeholder="you@example.com" required />
@@ -49,7 +49,21 @@
           </div>
 
           <button type="submit" class="btn btn-primary">Login</button>
+          <p id="loginMessage" class="form-note" role="alert" aria-live="polite"></p>
         </form>
+
+        <div class="organizer-demo-note">
+          <strong>Organizer demo access</strong>
+          <span>Email: organizer@eventease.com</span>
+          <span>Password: Organizer@123</span>
+          <a href="organizer.html">Open Organizer Studio →</a>
+        </div>
+        <div class="organizer-demo-note admin-demo-note">
+          <strong>Administrator demo access</strong>
+          <span>Email: admin@eventease.com</span>
+          <span>Password: Admin@123</span>
+          <a href="admin.html">Open Administration →</a>
+        </div>
 
         <p class="link-line"><a href="forgot-password.html">Forgot password?</a></p>
         <p class="link-line">New here? <a href="register.html">Create an account</a></p>
