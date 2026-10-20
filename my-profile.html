@@ -15,6 +15,7 @@
           <a href="book-event.html">Book Event</a>
           <a href="my-bookings.html">My Bookings</a>
           <a href="my-tickets.html">My Tickets</a>
+          <a href="notifications.html">Notifications</a>
           <a class="active" href="my-profile.html">My Profile</a>
         </nav>
         <div class="nav-actions">
@@ -48,7 +49,7 @@
 
           <div class="profile-card">
             <h3>Update profile</h3>
-            <form class="form-grid" data-result-text="Your profile has been updated successfully.">
+            <form id="profileForm" class="form-grid">
               <div class="field-inline">
                 <div class="field">
                   <label for="profileName">Full name</label>
@@ -59,11 +60,12 @@
                   <input id="profileEmail" type="email" value="priya@example.com" />
                 </div>
               </div>
-              <div class="field">
-                <label for="profilePassword">Change password</label>
-                <input id="profilePassword" type="password" placeholder="Enter new password" />
-              </div>
               <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+            <form id="passwordForm" class="form-grid" style="margin-top:24px;">
+              <div class="field"><label for="currentPassword">Current password</label><input id="currentPassword" type="password" autocomplete="current-password" required /></div>
+              <div class="field"><label for="newPassword">New password</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required /></div>
+              <button type="submit" class="btn btn-secondary">Change password</button>
             </form>
           </div>
         </div>
@@ -106,6 +108,7 @@
       </div>
     </footer>
 
+    <script src="assets/api.js"></script>
     <script src="assets/script.js"></script>
   </body>
 </html>

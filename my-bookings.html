@@ -40,21 +40,20 @@
 
       <section class="section">
         <div class="container">
-          <div class="filter-box">
-            <input type="text" placeholder="Search bookings" />
-            <select>
+          <form id="bookingFilters" class="filter-box">
+            <input name="q" type="search" placeholder="Search bookings" />
+            <select name="status">
               <option>All statuses</option>
               <option>Confirmed</option>
               <option>Completed</option>
               <option>Cancelled</option>
             </select>
-            <input type="date" />
-            <select>
+            <select name="sort">
               <option>Newest first</option>
               <option>Oldest first</option>
             </select>
-            <button class="btn btn-primary" style="padding:0.8rem 1rem;">Filter</button>
-          </div>
+            <button type="submit" class="btn btn-primary" style="padding:0.8rem 1rem;">Filter</button>
+          </form>
 
           <div class="booking-list" style="margin-top:28px;">
             <div class="booking-item">
@@ -130,6 +129,7 @@
       </div>
     </footer>
 
+    <script src="assets/api.js"></script>
     <script src="assets/script.js"></script>
   </body>
 </html>

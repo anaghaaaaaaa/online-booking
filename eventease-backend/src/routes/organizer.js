@@ -1,0 +1,23 @@
+import { Router } from 'express';
+import { auth } from '../middleware/auth.js';
+import { requireRole } from '../middleware/requireRole.js';
+import { validate } from '../middleware/validate.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import * as controller from '../controllers/organizerController.js';
+import { bookingQuerySchema, createEventSchema, idOnlySchema, noInputSchema, organizerEventQuerySchema, reportsQuerySchema, updateEventSchema } from '../validators/schemas.js';
+
+const router = Router();
+router.use(auth, requireRole('organizer'));
+router.get('/dashboard', validate(noInputSchema), asyncHandler(controller.dashboard));
+router.get('/events', validate(organizerEventQuerySchema), asyncHandler(controller.listEvents));
+router.post('/events', validate(createEventSchema), asyncHandler(controller.createEvent));
+router.get('/events/:id/bookings/export', validate(bookingQuerySchema), asyncHandler(controller.exportEventBookings));
+router.get('/events/:id/bookings', validate(bookingQuerySchema), asyncHandler(controller.eventBookings));
+router.post('/events/:id/cancel', validate(idOnlySchema), asyncHandler(controller.cancelEvent));
+router.get('/events/:id', validate(idOnlySchema), asyncHandler(controller.getEvent));
+router.put('/events/:id', validate(updateEventSchema), asyncHandler(controller.updateEvent));
+router.delete('/events/:id', validate(idOnlySchema), asyncHandler(controller.deleteEvent));
+router.get('/bookings/export', validate(bookingQuerySchema), asyncHandler(controller.exportBookings));
+router.get('/bookings', validate(bookingQuerySchema), asyncHandler(controller.allBookings));
+router.get('/reports', validate(reportsQuerySchema), asyncHandler(controller.reports));
+export default router;

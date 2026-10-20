@@ -408,6 +408,7 @@ button, input, select, textarea { font: inherit; }
   width: 120px; height: 120px; border: 1px dashed var(--primary); border-radius: 18px; background: repeating-linear-gradient(45deg, rgba(91,74,227,0.06), rgba(91,74,227,0.06) 8px, transparent 8px, transparent 16px);
   display: grid; place-items: center; color: var(--primary); font-weight: 800;
 }
+.qr-image { width: 112px; height: 112px; object-fit: contain; }
 .status-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 
 .booking-box .qty-row {
@@ -465,7 +466,7 @@ footer {
 
 .organizer-app { background: #f4f6fa; color: #1b2438; }
 .org-shell { min-height: 100vh; }
-.org-sidebar { width: 252px; position: fixed; inset: 0 auto 0 0; display: flex; flex-direction: column; background: #171d2c; color: #eef1f8; padding: 24px 16px 18px; z-index: 80; }
+.org-sidebar { width: 252px; position: fixed; inset: 0 auto 0 0; display: flex; flex-direction: column; overflow-y: auto; background: #171d2c; color: #eef1f8; padding: 24px 16px 18px; z-index: 80; }
 .org-brand { display: flex; gap: 12px; align-items: center; color: #fff; font-size: 1.02rem; font-weight: 750; letter-spacing: 0; }
 .org-logo { width: 40px; height: 40px; flex: 0 0 40px; display: grid; place-items: center; border-radius: 12px; color: white; background: linear-gradient(145deg, #635bdf, #28bfa7); font-size: 1.1rem; }
 .org-brand-sub { display: block; margin-top: 2px; color: #9aa4b8; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.09em; }

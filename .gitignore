@@ -1,0 +1,13 @@
+**/.env
+**/node_modules/
+**/coverage/
+**/*.log
+**/test-results/
+**/playwright-report/
+**/.tmp/
+**/test-output/
+*.test-output
+/DEMO.md
+/e2e/.tmp/
+/e2e/test-results/
+/e2e/playwright-report/

@@ -1,0 +1,74 @@
+{
+  "info": {
+    "name": "EventEase API v1",
+    "description": "Cookie-authenticated API smoke tests. Login first; Postman stores the httpOnly cookie in its cookie jar.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api/v1" },
+    { "key": "eventId", "value": "1" },
+    { "key": "bookingId", "value": "1" },
+    { "key": "userEmail", "value": "" },
+    { "key": "userPassword", "value": "" },
+    { "key": "organizerEmail", "value": "" },
+    { "key": "organizerPassword", "value": "" },
+    { "key": "adminEmail", "value": "" },
+    { "key": "adminPassword", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health and public",
+      "item": [
+        { "name": "Health", "request": { "method": "GET", "url": "http://localhost:5000/health" } },
+        { "name": "Categories", "request": { "method": "GET", "url": "{{baseUrl}}/categories" } },
+        { "name": "Upcoming approved events", "request": { "method": "GET", "url": "{{baseUrl}}/events?page=1&limit=10&sort=date" } },
+        { "name": "Event details", "request": { "method": "GET", "url": "{{baseUrl}}/events/{{eventId}}" } },
+        { "name": "Contact", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Alex Guest\",\n  \"email\": \"alex@example.com\",\n  \"message\": \"Please send me information about upcoming events.\"\n}" }, "url": "{{baseUrl}}/contact" } }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        { "name": "Login user", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}" }, "url": "{{baseUrl}}/auth/login" } },
+        { "name": "Current user", "request": { "method": "GET", "url": "{{baseUrl}}/auth/me" } },
+        { "name": "Register user", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"New Guest\",\n  \"email\": \"new.guest@example.com\",\n  \"password\": \"SecurePass123\"\n}" }, "url": "{{baseUrl}}/auth/register" } },
+        { "name": "Logout", "request": { "method": "POST", "url": "{{baseUrl}}/auth/logout" } }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        { "name": "Create booking", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"eventId\": {{eventId}},\n  \"quantity\": 1\n}" }, "url": "{{baseUrl}}/bookings" } },
+        { "name": "My bookings", "request": { "method": "GET", "url": "{{baseUrl}}/bookings?page=1&limit=10" } },
+        { "name": "My booking details", "request": { "method": "GET", "url": "{{baseUrl}}/bookings/{{bookingId}}" } },
+        { "name": "Cancel booking", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"reason\": \"Plans changed\"\n}" }, "url": "{{baseUrl}}/bookings/{{bookingId}}/cancel" } },
+        { "name": "Tickets", "request": { "method": "GET", "url": "{{baseUrl}}/tickets" } },
+        { "name": "Dashboard summary", "request": { "method": "GET", "url": "{{baseUrl}}/dashboard/summary" } },
+        { "name": "Notifications", "request": { "method": "GET", "url": "{{baseUrl}}/notifications" } }
+      ]
+    },
+    {
+      "name": "Organizer",
+      "item": [
+        { "name": "Login organizer", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{organizerEmail}}\",\n  \"password\": \"{{organizerPassword}}\"\n}" }, "url": "{{baseUrl}}/auth/login" } },
+        { "name": "Organizer dashboard", "request": { "method": "GET", "url": "{{baseUrl}}/organizer/dashboard" } },
+        { "name": "My events", "request": { "method": "GET", "url": "{{baseUrl}}/organizer/events" } },
+        { "name": "Create event", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"title\": \"Community Design Night\",\n  \"description\": \"An evening for designers and makers to learn, share ideas, and meet local creative teams.\",\n  \"categoryId\": 1,\n  \"eventDate\": \"2030-06-20T18:00:00.000Z\",\n  \"venue\": \"Studio Hall\",\n  \"city\": \"Pune\",\n  \"bannerImage\": \"https://example.com/banner.jpg\",\n  \"ticketPrice\": 0,\n  \"capacity\": 80\n}" }, "url": "{{baseUrl}}/organizer/events" } },
+        { "name": "Organizer bookings", "request": { "method": "GET", "url": "{{baseUrl}}/organizer/bookings" } },
+        { "name": "Organizer report", "request": { "method": "GET", "url": "{{baseUrl}}/organizer/reports" } }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        { "name": "Login admin", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}" }, "url": "{{baseUrl}}/auth/login" } },
+        { "name": "Admin dashboard", "request": { "method": "GET", "url": "{{baseUrl}}/admin/dashboard" } },
+        { "name": "Pending events", "request": { "method": "GET", "url": "{{baseUrl}}/admin/events/pending" } },
+        { "name": "Organizer requests", "request": { "method": "GET", "url": "{{baseUrl}}/admin/organizer-requests?status=Pending" } },
+        { "name": "All users", "request": { "method": "GET", "url": "{{baseUrl}}/admin/users?page=1&limit=10" } },
+        { "name": "All bookings", "request": { "method": "GET", "url": "{{baseUrl}}/admin/bookings" } },
+        { "name": "Activity log", "request": { "method": "GET", "url": "{{baseUrl}}/admin/activity" } }
+      ]
+    }
+  ]
+}

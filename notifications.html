@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notifications | EventEase</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav-wrap">
+        <a href="dashboard.html" class="brand"><span class="brand-mark">E</span><span>EventEase</span></a>
+        <nav class="nav-links" aria-label="User navigation">
+          <a href="dashboard.html">Dashboard</a>
+          <a href="explore.html">Explore events</a>
+          <a href="my-bookings.html">My Bookings</a>
+          <a class="active" href="notifications.html">Notifications</a>
+          <a href="my-profile.html">My Profile</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+          <a href="index.html" class="btn btn-secondary">Logout</a>
+        </div>
+      </div>
+    </header>
+    <main>
+      <section class="page-hero">
+        <div class="container page-hero-inner">
+          <div><span class="eyebrow">Account updates</span><h1>Notifications</h1><p>Booking and event updates from EventEase.</p></div>
+        </div>
+      </section>
+      <section class="section">
+        <div class="container" data-notifications><p class="form-note">Loading notifications…</p></div>
+      </section>
+    </main>
+    <script src="assets/api.js"></script>
+    <script src="assets/script.js"></script>
+  </body>
+</html>
