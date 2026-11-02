@@ -90,12 +90,14 @@ document.addEventListener('DOMContentLoaded', () => {
       await render();
     },
     event: async (form) => {
-      const data = new FormData(form);
-      const body = {
-        title: data.get('title'), description: data.get('description'), categoryId: Number(data.get('categoryId')),
-        eventDate: data.get('eventDate'), venue: data.get('venue'), city: data.get('city'),
-        bannerImage: data.get('bannerImage'), ticketPrice: Number(data.get('ticketPrice')), capacity: Number(data.get('capacity'))
-      };
+      if (!form.reportValidity()) return;
+      const body = {};
+      const numericFields = new Set(['categoryId', 'ticketPrice', 'capacity']);
+      for (const name of ['title', 'description', 'categoryId', 'eventDate', 'venue', 'city', 'bannerImage', 'ticketPrice', 'capacity']) {
+        const field = form.elements.namedItem(name);
+        if (!field || field.disabled || field.value === '') continue;
+        body[name] = numericFields.has(name) ? Number(field.value) : field.value;
+      }
       const id = form.dataset.id;
       if (id) await api.organizer.updateEvent(id, body);
       else await api.organizer.createEvent(body);
@@ -207,9 +209,13 @@ document.addEventListener('DOMContentLoaded', () => {
       api.events.categories(),
       id ? api.organizer.event(id) : Promise.resolve(null)
     ]);
+    const sold = Number(event?.confirmed_tickets || 0);
+    const restrictApproved = event?.status === 'Approved' && sold > 0;
     const options = categories.map((item) => `<option value="${item.id}" ${Number(item.id) === Number(event?.category_id) ? 'selected' : ''}>${escapeHtml(item.category_name)}</option>`).join('');
     const date = event?.event_date ? new Date(event.event_date).toISOString().slice(0, 16) : '';
-    return `${pageHeading('EVENT DETAILS', id ? 'Edit event' : 'Create event', 'The API validates approval and booking restrictions when saving.')}<form class="org-form-grid org-panel" data-panel-form="event" ${id ? `data-id="${escapeHtml(id)}"` : ''}><label class="org-field"><span>Event title</span><input name="title" required minlength="3" maxlength="180" value="${escapeHtml(event?.title || '')}"></label><label class="org-field"><span>Category</span><select name="categoryId" required>${options}</select></label><label class="org-field org-field-full"><span>Description</span><textarea name="description" required minlength="30">${escapeHtml(event?.description || '')}</textarea></label><label class="org-field"><span>Date and time</span><input name="eventDate" type="datetime-local" required value="${escapeHtml(date)}"></label><label class="org-field"><span>Venue</span><input name="venue" required value="${escapeHtml(event?.venue || '')}"></label><label class="org-field"><span>City</span><input name="city" required value="${escapeHtml(event?.city || '')}"></label><label class="org-field"><span>Banner image URL</span><input name="bannerImage" type="url" required value="${escapeHtml(event?.banner_image || event?.bannerImage || '')}"></label><label class="org-field"><span>Ticket price</span><input name="ticketPrice" type="number" min="0" step="0.01" required value="${Number(event?.ticket_price ?? event?.ticketPrice ?? 0)}"></label><label class="org-field"><span>Capacity</span><input name="capacity" type="number" min="1" max="100000" required value="${Number(event?.capacity || 1)}"></label><button class="org-button org-button-primary org-field-full" type="submit">Save event</button></form>`;
+    const locked = restrictApproved ? 'disabled aria-disabled="true"' : '';
+    const rule = restrictApproved ? `<div class="org-info-callout org-field-full">This approved event has ${sold} confirmed tickets. Title, category, date, time, price, and city are locked. You may update description, image, venue, or increase capacity (minimum ${sold}).</div>` : '';
+    return `${pageHeading('EVENT DETAILS', id ? 'Edit event' : 'Create event', 'The API validates approval and booking restrictions when saving.')}<form class="org-form-grid org-panel" data-panel-form="event" ${id ? `data-id="${escapeHtml(id)}"` : ''}><label class="org-field"><span>Event title</span><input name="title" required minlength="3" maxlength="180" value="${escapeHtml(event?.title || '')}" ${locked}></label><label class="org-field"><span>Category</span><select name="categoryId" required ${locked}>${options}</select></label><label class="org-field org-field-full"><span>Description</span><textarea name="description" required minlength="30">${escapeHtml(event?.description || '')}</textarea></label>${rule}<label class="org-field"><span>Date and time</span><input name="eventDate" type="datetime-local" required value="${escapeHtml(date)}" ${locked}></label><label class="org-field"><span>Venue</span><input name="venue" required value="${escapeHtml(event?.venue || '')}"></label><label class="org-field"><span>City</span><input name="city" required value="${escapeHtml(event?.city || '')}" ${locked}></label><label class="org-field"><span>Banner image URL</span><input name="bannerImage" type="url" required value="${escapeHtml(event?.banner_image || event?.bannerImage || '')}"></label><label class="org-field"><span>Ticket price</span><input name="ticketPrice" type="number" min="0" step="0.01" required value="${Number(event?.ticket_price ?? event?.ticketPrice ?? 0)}" ${locked}></label><label class="org-field"><span>Capacity</span><input name="capacity" type="number" min="${Math.max(1, sold)}" max="100000" required value="${Number(event?.capacity || 1)}"></label><button class="org-button org-button-primary org-field-full" type="submit">Save event</button></form>`;
   }
 
   async function eventsPage() {

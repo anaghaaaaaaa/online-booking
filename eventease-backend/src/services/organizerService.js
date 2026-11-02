@@ -20,7 +20,7 @@ export async function listEvents(organizerId, query) {
 }
 
 export async function getEvent(organizerId, eventId) {
-  const [rows] = await pool.execute(`${eventSelect} WHERE e.id = ? AND e.organizer_id = ? LIMIT 1`, [eventId, organizerId]);
+  const [rows] = await pool.execute(`SELECT e.*, c.category_name, (SELECT COALESCE(SUM(b.quantity), 0) FROM bookings b WHERE b.event_id = e.id AND b.booking_status = 'Confirmed') AS confirmed_tickets FROM events e JOIN categories c ON c.id = e.category_id WHERE e.id = ? AND e.organizer_id = ? LIMIT 1`, [eventId, organizerId]);
   if (!rows[0]) throw new ApiError(404, 'Event not found.');
   return rows[0];
 }
