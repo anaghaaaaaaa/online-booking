@@ -11,3 +11,5 @@ npm run screenshots
 ```
 
 `npm test` runs the five UI journeys plus responsive checks at 1366, 768, and 390 pixels. Screenshots are saved in `e2e/screenshots/`. `npm run screenshots` runs the same suite so it can recreate the temporary authenticated sessions required for the screenshots. Test users, events, and bookings are temporary and cleaned up.
+
+If Python is available only through the Windows launcher, set `$env:PYTHON = 'py'` before running the suite; the runner starts it with `py -3`.

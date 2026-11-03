@@ -22,6 +22,9 @@ const identities = {
   admin: { email: emailFor('admin'), name: 'QA Admin' }
 };
 const fixtures = { userIds: [], eventIds: [], bookingIds: [], activityAdminIds: [] };
+const smokeConsoleErrors = [];
+const smokePageErrors = [];
+const smokeUnauthorizedResponses = [];
 let connection;
 let categoryId;
 let organizerId;
@@ -44,6 +47,16 @@ const dbConfig = () => ({
   password: process.env.DB_PASSWORD,
   database: 'eventease_test'
 });
+
+function watchSmokePage(page, label) {
+  page.on('console', (message) => {
+    if (message.type() === 'error') smokeConsoleErrors.push(message.text());
+  });
+  page.on('pageerror', (error) => smokePageErrors.push(error.message));
+  page.on('response', (response) => {
+    if (response.status() === 401) smokeUnauthorizedResponses.push(`${label}: ${response.url()}`);
+  });
+}
 
 test.beforeAll(async () => {
   assert.equal(process.env.DB_NAME, 'eventease_test', 'E2E must only use eventease_test.');
@@ -114,6 +127,7 @@ test.afterAll(async () => {
 test('1. Register and log in with role-based redirects', async ({ browser }) => {
   const context = await makeContext(browser);
   const page = await context.newPage();
+  watchSmokePage(page, 'registration/login');
   identities.user.email = emailFor('registered');
   identities.user.name = `Registered E2E ${tag}`;
 
@@ -148,6 +162,7 @@ test('1. Register and log in with role-based redirects', async ({ browser }) => 
 test('2. Guest login returns to the selected booking page', async ({ browser }) => {
   const context = await makeContext(browser);
   const page = await context.newPage();
+  watchSmokePage(page, 'guest booking');
   await page.goto(`${SITE}/book-event.html?event=${bookingEventId}`);
   await expect(page).toHaveURL(/login\.html\?returnTo=/);
   await page.waitForLoadState('networkidle');
@@ -167,6 +182,7 @@ test('2. Guest login returns to the selected booking page', async ({ browser }) 
 test('3. Book, render/print QR, then cancel and verify inventory and ticket visibility', async ({ browser }) => {
   const context = await makeContext(browser, userState);
   const page = await context.newPage();
+  watchSmokePage(page, 'booking/tickets');
   await page.goto(`${SITE}/book-event.html?event=${bookingEventId}`);
   await expect(page.locator('#bookingForm')).toBeVisible();
   await page.locator('#ticketQty').fill('2');
@@ -252,6 +268,7 @@ test('3. Book, render/print QR, then cancel and verify inventory and ticket visi
 test('4. Organizer creates event; admin approves it and it becomes public', async ({ browser }) => {
   const context = await makeContext(browser, organizerState);
   const page = await context.newPage();
+  watchSmokePage(page, 'organizer');
   await page.goto(`${SITE}/organizer.html#/events/new`);
   await page.locator('[name="title"]').fill(`E2E Approval ${tag}`);
   await page.locator('[name="categoryId"]').selectOption(String(categoryId));
@@ -275,6 +292,7 @@ test('4. Organizer creates event; admin approves it and it becomes public', asyn
 
   const adminContext = await makeContext(browser, adminState);
   const adminPage = await adminContext.newPage();
+  watchSmokePage(adminPage, 'admin/public listing');
   await adminPage.goto(`${SITE}/admin.html#/events`);
   const eventRow = adminPage.locator('tr').filter({ hasText: `E2E Approval ${tag}` });
   await expect(eventRow).toContainText('Pending');
@@ -284,6 +302,18 @@ test('4. Organizer creates event; admin approves it and it becomes public', asyn
   await adminPage.goto(`${SITE}/explore.html?q=${encodeURIComponent(`E2E Approval ${tag}`)}`);
   await expect(adminPage.locator('.events-grid')).toContainText(`E2E Approval ${tag}`);
   await adminContext.close();
+  const blockedRemoteResources = smokeConsoleErrors.filter((message) => message.includes('net::ERR_FAILED'));
+  const expectedGuestAuth401s = smokeUnauthorizedResponses.filter((response) =>
+    response.includes('/auth/me') && (response.startsWith('registration/login:') || response.startsWith('guest booking:'))
+  );
+  const unexpectedUnauthorizedResponses = smokeUnauthorizedResponses.filter((response) => !expectedGuestAuth401s.includes(response));
+  const applicationConsoleErrors = smokeConsoleErrors.filter((message) =>
+    !message.includes('net::ERR_FAILED') && !message.includes('401 (Unauthorized)')
+  );
+  expect(applicationConsoleErrors).toEqual([]);
+  expect(unexpectedUnauthorizedResponses).toEqual([]);
+  expect(smokePageErrors).toEqual([]);
+  console.log(`Core browser smoke: ${applicationConsoleErrors.length} application console errors, ${smokePageErrors.length} uncaught page errors, ${expectedGuestAuth401s.length} expected guest auth 401s, ${blockedRemoteResources.length} blocked remote-resource errors.`);
 });
 
 test('5. Logged-out and wrong-role routes are denied or redirected', async ({ browser }) => {

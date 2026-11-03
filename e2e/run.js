@@ -8,6 +8,17 @@ const e2eRoot = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(e2eRoot, '..');
 const backendRoot = path.join(projectRoot, 'eventease-backend');
 const testDatabase = 'eventease_test';
+const pythonCommand = process.env.PYTHON || 'python';
+const pythonArgs = [
+  ...(path.basename(pythonCommand).toLowerCase().replace(/\.exe$/, '') === 'py' ? ['-3'] : []),
+  '-m',
+  'http.server',
+  '8100',
+  '--bind',
+  '127.0.0.1',
+  '--directory',
+  projectRoot
+];
 
 if (process.env.DB_NAME && process.env.DB_NAME !== testDatabase) {
   throw new Error('E2E is restricted to eventease_test; refusing to run against another database.');
@@ -37,7 +48,7 @@ const prep = spawnSync(process.execPath, ['prepare-db.js'], {
 if (prep.status !== 0) process.exit(prep.status || 1);
 
 const api = spawn(process.execPath, ['src/server.js'], { cwd: backendRoot, env, stdio: 'inherit' });
-const frontend = spawn('python', ['-m', 'http.server', '8100', '--bind', '127.0.0.1', '--directory', projectRoot], { cwd: projectRoot, env, stdio: 'inherit' });
+const frontend = spawn(pythonCommand, pythonArgs, { cwd: projectRoot, env, stdio: 'inherit' });
 const stop = (child) => {
   if (child.exitCode === null) child.kill();
 };
