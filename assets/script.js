@@ -12,9 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const dateTime = (value) => value ? new Intl.DateTimeFormat('en-IN', {
     dateStyle: 'medium', timeStyle: 'short'
   }).format(new Date(value)) : '—';
-  const dateOnly = (value) => value ? new Intl.DateTimeFormat('en-IN', {
-    dateStyle: 'medium'
-  }).format(new Date(value)) : '—';
   const page = location.pathname.split('/').pop().toLowerCase();
 
   function showPageError(message, target = document.querySelector('main')) {

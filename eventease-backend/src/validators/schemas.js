@@ -5,7 +5,6 @@ const email = z.string().trim().email().max(254).transform((value) => value.toLo
 const futureDate = z.string().refine((value) => !Number.isNaN(Date.parse(value)) && new Date(value) > new Date(), 'Event date must be in the future.');
 const imageUrl = z.string().url().max(2048).refine((value) => ['http:', 'https:'].includes(new URL(value).protocol));
 
-export const emptyQuery = z.object({ body: z.any(), params: z.object({}), query: z.object({}) }).partial({ body: true, params: true, query: true });
 export const noInputSchema = z.object({ body: z.any().optional(), params: z.object({}).optional(), query: z.object({}).optional() });
 export const idOnlySchema = z.object({ params: z.object({ id }) });
 export const adminEventsQuerySchema = z.object({ query: z.object({ q: z.string().max(120).optional(), status: z.enum(['Pending', 'Approved', 'Rejected', 'Cancelled', 'Removed']).optional(), page: z.coerce.number().int().min(1).optional(), limit: z.coerce.number().int().min(1).max(50).optional() }) });
@@ -46,4 +45,3 @@ export const removeSchema = z.object({ params: z.object({ id }), body: z.object(
 export const userStatusSchema = z.object({ params: z.object({ id }), body: z.object({ status: z.enum(['Active', 'Blocked']) }) });
 export const userRoleSchema = z.object({ params: z.object({ id }), body: z.object({ role: z.enum(['user', 'organizer']) }) });
 export const requestReviewSchema = z.object({ params: z.object({ id }), body: z.object({ note: z.string().trim().max(1000).optional() }) });
-export const categorySchema = z.object({ body: z.object({ categoryName: z.string().trim().min(2).max(30) }), params: z.object({ id }).optional() });
