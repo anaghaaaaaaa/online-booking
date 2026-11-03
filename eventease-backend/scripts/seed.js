@@ -1,11 +1,19 @@
+import { randomBytes } from 'node:crypto';
+import { writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import bcrypt from 'bcrypt';
 import { pool, withTransaction } from '../src/config/db.js';
+import { env } from '../src/config/env.js';
 
 const accounts = [
-  { name: 'EventEase Admin', email: 'admin@eventease.com', password: 'Admin@123', role: 'admin', organization: null },
-  { name: 'Avery Morgan', email: 'organizer@eventease.com', password: 'Organizer@123', role: 'organizer', organization: 'EventEase Studio' },
-  { name: 'Priya Sharma', email: 'user@eventease.com', password: 'User@1234', role: 'user', organization: null }
+  { name: 'EventEase Admin', email: 'admin@eventease.com', password: randomBytes(24).toString('base64url'), role: 'admin', organization: null },
+  { name: 'Avery Morgan', email: 'organizer@eventease.com', password: randomBytes(24).toString('base64url'), role: 'organizer', organization: 'EventEase Studio' },
+  { name: 'Priya Sharma', email: 'user@eventease.com', password: randomBytes(24).toString('base64url'), role: 'user', organization: null }
 ];
+const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const isDemoDatabase = env.DB_NAME === 'eventease';
+const passwordHashUpdate = isDemoDatabase ? 'password_hash = VALUES(password_hash), ' : '';
 const categoryNames = ['Music', 'Tech', 'Food & Drink', 'Arts', 'Sports', 'Business'];
 const pictures = [
   'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1200&q=80',
@@ -42,7 +50,7 @@ try {
     await pool.execute(
       `INSERT INTO users (name, email, password_hash, role, status, organization_name)
        VALUES (?, ?, ?, ?, 'Active', ?)
-      ON DUPLICATE KEY UPDATE name = VALUES(name), password_hash = VALUES(password_hash), role = VALUES(role), status = 'Active', organization_name = VALUES(organization_name)`,
+      ON DUPLICATE KEY UPDATE name = VALUES(name), ${passwordHashUpdate}role = VALUES(role), status = 'Active', organization_name = VALUES(organization_name)`,
       [account.name, account.email, passwordHash, account.role, account.organization]
     );
     const [[row]] = await pool.execute('SELECT id FROM users WHERE email = ?', [account.email]);
@@ -79,8 +87,19 @@ try {
     }
   });
 
-  console.log('Seed complete. Demo accounts:');
-  for (const account of accounts) console.log(`- ${account.role}: ${account.email} / ${account.password}`);
+  if (isDemoDatabase) {
+    const credentials = [
+      '# Local EventEase demo credentials',
+      '',
+      'These randomly generated passwords are for this local demo only. Keep this ignored file private.',
+      '',
+      ...accounts.map((account) => `- ${account.role}: ${account.email} / ${account.password}`)
+    ].join('\n');
+    await writeFile(path.join(projectRoot, 'DEMO.md'), `${credentials}\n`, { mode: 0o600 });
+  }
+  console.log(isDemoDatabase
+    ? 'Seed complete. Local demo credentials were written to the ignored DEMO.md file.'
+    : 'Seed complete. Test database fixtures are ready.');
 } catch (error) {
   console.error('Seed failed:', error.message);
   process.exitCode = 1;

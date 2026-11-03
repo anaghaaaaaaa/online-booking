@@ -1,9 +1,11 @@
 import 'dotenv/config';
 import assert from 'node:assert/strict';
+import { randomBytes } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import bcrypt from 'bcrypt';
 import test from 'node:test';
 import mysql from 'mysql2/promise';
 import request from 'supertest';
@@ -69,11 +71,14 @@ test('MySQL integration: auth, role access, booking concurrency, cancellation, a
     organizerId = Number(organizerRow.id);
 
     await t.test('demo auth and registration', async () => {
-      const adminLogin = await admin.post('/api/v1/auth/login').send({ email: 'admin@eventease.com', password: 'Admin@123' });
+      const testPassword = randomBytes(24).toString('base64url');
+      const testPasswordHash = await bcrypt.hash(testPassword, 12);
+      await connection.execute('UPDATE users SET password_hash = ? WHERE id IN (?, ?)', [testPasswordHash, adminId, organizerId]);
+      const adminLogin = await admin.post('/api/v1/auth/login').send({ email: 'admin@eventease.com', password: testPassword });
       assert.equal(adminLogin.status, 200);
       assert.equal(adminLogin.body.data.user.role, 'admin');
 
-      const organizerLogin = await organizer.post('/api/v1/auth/login').send({ email: 'organizer@eventease.com', password: 'Organizer@123' });
+      const organizerLogin = await organizer.post('/api/v1/auth/login').send({ email: 'organizer@eventease.com', password: testPassword });
       assert.equal(organizerLogin.status, 200);
       assert.equal(organizerLogin.body.data.user.role, 'organizer');
       assert.equal((await organizer.get('/api/v1/organizer/dashboard')).status, 200);
