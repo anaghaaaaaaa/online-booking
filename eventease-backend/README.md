@@ -13,10 +13,12 @@ REST API for the EventEase static frontend. It is built with Node.js ES modules,
 
 Create the two databases and a dedicated application user in MySQL, replacing placeholders with private values:
 
+In PowerShell, open the MySQL client with `mysql -u root -p` and run the SQL below, or use MySQL Workbench. If `mysql.exe` is not on `PATH`, start it with `& 'C:\Program Files\MySQL\MySQL Server 9.2\bin\mysql.exe' -u root -p`. You can also add that `bin` folder to the current PowerShell session with `$env:Path += ';C:\Program Files\MySQL\MySQL Server 9.2\bin'`.
+
 ```sql
-CREATE DATABASE eventease CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-CREATE DATABASE eventease_test CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-CREATE USER 'eventease_user'@'localhost' IDENTIFIED BY 'StrongLocalPassword123!';
+CREATE DATABASE IF NOT EXISTS eventease CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+CREATE DATABASE IF NOT EXISTS eventease_test CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+CREATE USER IF NOT EXISTS 'eventease_user'@'localhost' IDENTIFIED BY 'StrongLocalPassword123!';
 GRANT ALL PRIVILEGES ON eventease.* TO 'eventease_user'@'localhost';
 GRANT ALL PRIVILEGES ON eventease_test.* TO 'eventease_user'@'localhost';
 FLUSH PRIVILEGES;
@@ -49,10 +51,12 @@ COOKIE_SECURE=false
 Apply the schema and seed the local development data:
 
 ```powershell
-mysql -u your_mysql_admin -p --database=eventease < .\sql\schema.sql
+Get-Content .\sql\schema.sql | mysql -u your_mysql_admin -p --database=eventease
 npm install
 npm run seed
 ```
+
+If `mysql.exe` is not on `PATH`, replace `mysql` with `& 'C:\Program Files\MySQL\MySQL Server 9.2\bin\mysql.exe'`.
 
 Then start the API:
 
@@ -68,9 +72,11 @@ The API listens at `http://localhost:5000`; `GET /api/v1/health` verifies the da
 
 ```powershell
 mysql -u your_mysql_admin -p -e "DROP DATABASE IF EXISTS eventease; DROP DATABASE IF EXISTS eventease_test; CREATE DATABASE eventease CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci; CREATE DATABASE eventease_test CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;"
-mysql -u your_mysql_admin -p --database=eventease < .\sql\schema.sql
+Get-Content .\sql\schema.sql | mysql -u your_mysql_admin -p --database=eventease
 npm run seed
 ```
+
+If `mysql.exe` is not on `PATH`, replace `mysql` with `& 'C:\Program Files\MySQL\MySQL Server 9.2\bin\mysql.exe'`.
 
 ## Tests
 

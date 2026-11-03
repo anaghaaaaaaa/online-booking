@@ -13,10 +13,12 @@ EventEase is a local online event booking and management demo. The static fronte
 
 1. Create the app user and both databases in MySQL. Replace the placeholders with private values that you control.
 
+   In PowerShell, open the MySQL client with `mysql -u root -p` and run the SQL below, or use MySQL Workbench. If `mysql.exe` is not on `PATH`, start it with `& 'C:\Program Files\MySQL\MySQL Server 9.2\bin\mysql.exe' -u root -p`. You can also add that `bin` folder to the current PowerShell session with `$env:Path += ';C:\Program Files\MySQL\MySQL Server 9.2\bin'`.
+
    ```sql
-   CREATE DATABASE eventease CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-   CREATE DATABASE eventease_test CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-   CREATE USER 'eventease_user'@'localhost' IDENTIFIED BY 'StrongLocalPassword123!';
+   CREATE DATABASE IF NOT EXISTS eventease CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+   CREATE DATABASE IF NOT EXISTS eventease_test CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+   CREATE USER IF NOT EXISTS 'eventease_user'@'localhost' IDENTIFIED BY 'StrongLocalPassword123!';
    GRANT ALL PRIVILEGES ON eventease.* TO 'eventease_user'@'localhost';
    GRANT ALL PRIVILEGES ON eventease_test.* TO 'eventease_user'@'localhost';
    FLUSH PRIVILEGES;
@@ -51,10 +53,12 @@ EventEase is a local online event booking and management demo. The static fronte
 3. Apply the schema and seed demo data.
 
    ```powershell
-   mysql -u your_mysql_admin -p --database=eventease < .\sql\schema.sql
+   Get-Content .\sql\schema.sql | mysql -u your_mysql_admin -p --database=eventease
    npm install
    npm run seed
    ```
+
+   If `mysql.exe` is not on `PATH`, replace `mysql` with `& 'C:\Program Files\MySQL\MySQL Server 9.2\bin\mysql.exe'`.
 
    `eventease-backend/scripts/seed.js` creates local demo accounts and sample events. Their usernames/passwords are intentionally stored only in the ignored `DEMO.md` file and must never be reused outside the local demo.
 
@@ -105,6 +109,8 @@ npm run install:browsers
 npm test
 ```
 
+If Python is available only through the Windows launcher, set `$env:PYTHON = 'py'` before `npm test`; the E2E runner starts it with `py -3`.
+
 The e2e runner uses `eventease_test`, creates a temporary test dataset, and then starts the backend on port 5100 with the frontend on `http://localhost:8100`.
 
 ## API summary
@@ -113,7 +119,7 @@ Base URL: `http://localhost:5000/api/v1`.
 
 - Auth/profile: `POST /auth/register`, `POST /auth/login`, `POST /auth/logout`, `GET /auth/me`, `PUT /auth/profile`, `PUT /auth/password`
 - Public: `GET /categories`, `GET /events`, `GET /events/:id`, `POST /contact`
-- User: `GET /bookings`, `GET /tickets`, `GET /notifications`, `GET /dashboard/summary`, `POST /bookings`, `DELETE /bookings/:id` or the cancel endpoint used by the app
+- User: `GET /bookings`, `GET /tickets`, `GET /notifications`, `GET /dashboard/summary`, `POST /bookings`, `POST /bookings/:id/cancel`
 - Organizer: `GET /organizer/dashboard`, `GET /organizer/events`, `GET /organizer/events/:id/bookings`, `GET /organizer/bookings`, `GET /organizer/reports`
 - Admin: `GET /admin/dashboard`, `GET /admin/events`, `GET /admin/users`, `GET /admin/organizer-requests`, `GET /admin/bookings`, `GET /admin/reports`
 
@@ -144,8 +150,10 @@ When you want a fresh local demo state:
 ```powershell
 mysql -u your_mysql_admin -p -e "DROP DATABASE IF EXISTS eventease; DROP DATABASE IF EXISTS eventease_test; CREATE DATABASE eventease CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci; CREATE DATABASE eventease_test CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;"
 Set-Location .\eventease-backend
-mysql -u your_mysql_admin -p --database=eventease < .\sql\schema.sql
+Get-Content .\sql\schema.sql | mysql -u your_mysql_admin -p --database=eventease
 npm run seed
 ```
+
+If `mysql.exe` is not on `PATH`, replace `mysql` with `& 'C:\Program Files\MySQL\MySQL Server 9.2\bin\mysql.exe'`.
 
 `eventease-backend/sql/schema.sql` creates tables if they do not already exist and does not drop the database first, so a full clean reset is best done by dropping the target database before re-running the schema script.
