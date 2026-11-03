@@ -42,7 +42,7 @@ export async function listUserBookings(userId, query) {
   const values = [userId];
   if (query.status === 'Completed') conditions.push("b.booking_status = 'Confirmed' AND e.event_date <= NOW()");
   else if (query.status) { conditions.push('b.booking_status = ?'); values.push(query.status); }
-  if (query.q) { conditions.push('(e.title LIKE ? OR b.ticket_id LIKE ?)'); values.push(`%${query.q}%`, `%${query.q}%`); }
+  if (query.q) { conditions.push('(e.title LIKE ? OR b.ticket_id LIKE ? OR CAST(b.id AS CHAR) LIKE ?)'); values.push(`%${query.q}%`, `%${query.q}%`, `%${query.q}%`); }
   const where = conditions.join(' AND ');
   const [rows] = await pool.execute(`SELECT b.id, b.ticket_id, b.quantity, b.total_amount, b.booking_status, b.cancelled_at, b.created_at, e.id AS event_id, e.title, e.event_date, e.venue, e.city, CASE WHEN b.booking_status = 'Cancelled' THEN 'Cancelled' WHEN e.event_date <= NOW() THEN 'Completed' ELSE 'Confirmed' END AS derived_status FROM bookings b JOIN events e ON e.id = b.event_id WHERE ${where} ORDER BY b.created_at DESC LIMIT ? OFFSET ?`, [...values, limit, offset]);
   const [counts] = await pool.execute(`SELECT COUNT(*) AS total FROM bookings b JOIN events e ON e.id = b.event_id WHERE ${where}`, values);

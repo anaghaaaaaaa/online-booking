@@ -709,11 +709,24 @@ footer {
 }
 
 @media print {
-  .org-sidebar, .org-topbar, .org-page-heading > .org-button, .org-report-toolbar, .org-backdrop { display: none !important; }
+  .topbar, footer, .actions, .org-sidebar, .org-topbar, .org-page-heading > .org-button, .org-report-toolbar, .org-backdrop { display: none !important; }
+  body { background: #fff; }
+  .section { padding: 16px 0; }
+  .ticket-grid { display: block; }
+  .ticket-card { border: 1px solid #999; box-shadow: none; break-inside: avoid; }
+  .qr-box { border: 0; background: none; }
+  .qr-image { width: 144px; height: 144px; }
   .org-main-column { margin: 0; }
   .org-content { width: 100%; padding: 0; }
   .org-panel, .org-stat-card { break-inside: avoid; box-shadow: none; }
   .organizer-app { background: #fff; }
+}
+
+@media (max-width: 800px) {
+  .nav-links { position: absolute; top: 82px; left: 16px; right: 16px; flex-direction: column; align-items: flex-start; background: rgba(255,255,255,0.96); border: 1px solid var(--border); padding: 20px; border-radius: 18px; box-shadow: var(--shadow); display: none; }
+  .nav-links.open { display: flex; }
+  .menu-toggle { display: inline-flex; width: 42px; height: 42px; border: 1px solid var(--border); background: #fff; border-radius: 12px; align-items: center; justify-content: center; }
+  .nav-actions .btn { display: none; }
 }
 
 @media (max-width: 980px) {
@@ -726,10 +739,6 @@ footer {
 }
 
 @media (max-width: 680px) {
-  .nav-links { position: absolute; top: 82px; left: 16px; right: 16px; flex-direction: column; align-items: flex-start; background: rgba(255,255,255,0.96); border: 1px solid var(--border); padding: 20px; border-radius: 18px; box-shadow: var(--shadow); display: none; }
-  .nav-links.open { display: flex; }
-  .menu-toggle { display: inline-flex; width: 42px; height: 42px; border: 1px solid var(--border); background: #fff; border-radius: 12px; align-items: center; justify-content: center; }
-  .nav-actions .btn { display: none; }
   .categories-grid, .events-grid, .summary-grid, .ticket-grid, .field-inline, .filter-box, .search-panel { grid-template-columns: 1fr; }
   .hero { padding-top: 42px; }
   .section-header, .page-hero-inner, .status-row { flex-direction: column; align-items: flex-start; }
