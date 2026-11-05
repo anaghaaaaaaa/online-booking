@@ -30,8 +30,8 @@
           <div class="page-hero-inner">
             <div>
               <span class="eyebrow">Book your seat</span>
-              <h1>Loading event…</h1>
-              <p>Select the number of tickets and confirm your reservation.</p>
+              <h1>Choose an event</h1>
+              <p>Select an event and ticket quantity to confirm your reservation.</p>
             </div>
             <a href="dashboard.html" class="btn btn-soft">Back to dashboard</a>
           </div>
@@ -42,21 +42,24 @@
         <div class="container detail-layout">
           <div class="detail-card">
             <div class="detail-banner">
-              <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1400&q=80" alt="Festival venue" />
+              <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1400&q=80" alt="Event venue" hidden />
             </div>
             <div style="margin-top:20px;">
               <h2>Event overview</h2>
-              <div class="detail-meta">
-                <span>Nov 18, 2026</span>
-                <span>7:00 PM</span>
-                <span>Phoenix Green Arena</span>
-              </div>
+              <p class="muted" data-event-placeholder>Choose an event to see its details.</p>
+              <div class="detail-meta" data-event-meta></div>
             </div>
           </div>
 
           <form id="bookingForm" class="booking-box">
             <h3>Booking summary</h3>
-            <p class="muted">Ticket price per seat: <strong data-price-per-seat="2999">₹2,999</strong></p>
+            <div class="field" data-event-picker>
+              <label for="eventSelect">Choose an approved upcoming event</label>
+              <select id="eventSelect" required disabled>
+                <option value="">Loading available events…</option>
+              </select>
+            </div>
+            <p class="muted">Ticket price per seat: <strong data-price-per-seat>—</strong></p>
 
             <div class="qty-row">
               <button type="button" data-qty-action="-1">−</button>
@@ -68,13 +71,13 @@
 
             <ul class="order-list">
               <li><span>Seat quantity</span><strong data-ticket-count>1</strong></li>
-              <li><span>Subtotal</span><strong data-total-price>₹5,998</strong></li>
+              <li><span>Subtotal</span><strong data-total-price>₹0</strong></li>
               <li><span>Service fee</span><strong>₹0</strong></li>
-              <li><span>Total</span><strong data-booking-total>—</strong></li>
+              <li><span>Total</span><strong data-booking-total>₹0</strong></li>
             </ul>
 
             <div style="margin-top:20px;">
-              <button type="submit" class="btn btn-primary" style="width:100%;">Confirm Booking</button>
+              <button type="submit" class="btn btn-primary" style="width:100%;" disabled>Confirm Booking</button>
             </div>
           </form>
         </div>

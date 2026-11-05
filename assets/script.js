@@ -211,11 +211,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const bookingForm = document.getElementById('bookingForm');
   let selectedEvent = null;
   const quantity = document.getElementById('ticketQty');
+  const eventPicker = document.getElementById('eventSelect');
+  const bookingButton = bookingForm?.querySelector('button[type="submit"]');
+  let bookableEvents = [];
   function updateTotal() {
     const count = Number(quantity?.value);
     const inRange = Number.isInteger(count) && count >= 1 && count <= 10;
     const available = !selectedEvent || count <= selectedEvent.seatsLeft;
     if (quantity) quantity.setCustomValidity(!inRange ? 'Choose a ticket quantity from 1 to 10.' : !available ? `Only ${selectedEvent.seatsLeft} seat(s) are available.` : '');
+    if (bookingButton) bookingButton.disabled = !selectedEvent || selectedEvent.seatsLeft < 1;
     const amount = (selectedEvent?.price || 0) * (Number.isFinite(count) && count > 0 ? count : 0);
     document.querySelectorAll('[data-total-price]').forEach((item) => { item.textContent = money(amount); });
     const countOutput = document.querySelector('[data-ticket-count]');
@@ -232,30 +236,77 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   quantity?.addEventListener('input', updateTotal);
 
+  function displayBookableEvent(event) {
+    selectedEvent = event;
+    document.querySelectorAll('.page-hero h1').forEach((node) => { node.textContent = event.title; });
+    const description = document.querySelector('.page-hero p');
+    if (description) description.textContent = 'Select your ticket quantity and confirm your reservation. No payment will be processed.';
+    const image = document.querySelector('.detail-banner img');
+    if (image) {
+      image.src = event.image || '';
+      image.alt = event.title;
+      image.hidden = !event.image;
+    }
+    const meta = document.querySelector('[data-event-meta]');
+    if (meta) meta.innerHTML = [dateTime(event.eventDate), `${event.venue}, ${event.city}`].map((item) => `<span>${escapeHtml(item)}</span>`).join('');
+    const placeholder = document.querySelector('[data-event-placeholder]');
+    if (placeholder) placeholder.hidden = true;
+    const price = document.querySelector('[data-price-per-seat]');
+    if (price) { price.dataset.pricePerSeat = event.price; price.textContent = money(event.price); }
+    const remaining = document.querySelector('[data-remaining-seats]');
+    if (remaining) remaining.textContent = String(event.seatsLeft);
+    if (event.seatsLeft < 1) showPageError('This event is sold out.', bookingForm);
+    updateTotal();
+  }
+
+  function clearBookableEvent() {
+    selectedEvent = null;
+    document.querySelectorAll('.page-hero h1').forEach((node) => { node.textContent = 'Choose an event'; });
+    const description = document.querySelector('.page-hero p');
+    if (description) description.textContent = 'Select an event and ticket quantity to confirm your reservation.';
+    const meta = document.querySelector('[data-event-meta]');
+    if (meta) meta.replaceChildren();
+    const placeholder = document.querySelector('[data-event-placeholder]');
+    if (placeholder) placeholder.hidden = false;
+    const image = document.querySelector('.detail-banner img');
+    if (image) image.hidden = true;
+    const price = document.querySelector('[data-price-per-seat]');
+    if (price) { delete price.dataset.pricePerSeat; price.textContent = '—'; }
+    const remaining = document.querySelector('[data-remaining-seats]');
+    if (remaining) remaining.textContent = '—';
+    updateTotal();
+  }
+
   async function loadBookableEvent() {
     const eventId = new URLSearchParams(location.search).get('event');
+    eventPicker?.addEventListener('change', () => {
+      const event = bookableEvents.find((item) => item.id === eventPicker.value);
+      if (event) displayBookableEvent(event);
+      else clearBookableEvent();
+    });
     if (!eventId) {
-      location.replace('explore.html');
+      const title = document.querySelector('.page-hero h1');
+      if (title) title.textContent = 'Choose an event';
+      try {
+        const data = await api.events.list({ page: 1, limit: 50 });
+        bookableEvents = data.items.filter((event) => event.seatsLeft > 0);
+        if (!eventPicker) return;
+        eventPicker.replaceChildren(new Option('Select an event', ''));
+        bookableEvents.forEach((event) => {
+          eventPicker.add(new Option(`${event.title} — ${dateTime(event.eventDate)} · ${event.city}`, event.id));
+        });
+        eventPicker.disabled = bookableEvents.length === 0;
+        if (!bookableEvents.length) showPageError('There are no available upcoming events to book.', bookingForm);
+      } catch (error) {
+        showPageError(error.message);
+      }
       return;
     }
+    const picker = eventPicker?.closest('[data-event-picker]');
+    if (picker) picker.hidden = true;
     try {
       const { event } = await api.events.get(eventId);
-      selectedEvent = event;
-      document.querySelectorAll('.page-hero h1').forEach((node) => { node.textContent = event.title; });
-      const description = document.querySelector('.page-hero p');
-      if (description) description.textContent = 'Select your ticket quantity and confirm your reservation. No payment will be processed.';
-      const image = document.querySelector('.detail-banner img');
-      if (image) { image.src = event.image; image.alt = event.title; }
-      const meta = document.querySelector('.detail-meta');
-      if (meta) meta.innerHTML = [dateTime(event.eventDate), `${event.venue}, ${event.city}`].map((item) => `<span>${escapeHtml(item)}</span>`).join('');
-      const price = document.querySelector('[data-price-per-seat]');
-      if (price) { price.dataset.pricePerSeat = event.price; price.textContent = money(event.price); }
-      const remaining = document.querySelector('[data-remaining-seats]');
-      if (remaining) remaining.textContent = String(event.seatsLeft);
-      if (quantity) quantity.max = '10';
-      if (bookingForm) bookingForm.hidden = event.seatsLeft < 1;
-      if (event.seatsLeft < 1) showPageError('This event is sold out.', document.querySelector('.booking-box'));
-      updateTotal();
+      displayBookableEvent(event);
     } catch (error) {
       showPageError(error.message);
     }

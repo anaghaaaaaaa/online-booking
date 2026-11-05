@@ -31,6 +31,7 @@ let organizerId;
 let adminId;
 let userId;
 let bookingEventId;
+let navigationEventId;
 let pastEventId;
 let pastBookingId;
 let userState;
@@ -85,6 +86,15 @@ test.beforeAll(async () => {
   );
   bookingEventId = Number(event.insertId);
   fixtures.eventIds.push(bookingEventId);
+
+  const [navigationEvent] = await connection.execute(
+    `INSERT INTO events
+      (title, description, category_id, event_date, venue, city, banner_image, ticket_price, capacity, available_seats, organizer_id, status)
+     VALUES (?, ?, ?, DATE_ADD(UTC_TIMESTAMP(), INTERVAL 11 DAY), ?, ?, ?, ?, ?, ?, ?, 'Approved')`,
+    [`E2E Navigation ${tag}`, 'A temporary event used to verify booking from the navigation.', categoryId, 'Navigation Hall', 'Bengaluru', 'https://example.test/navigation.png', 90, 3, 3, organizerId]
+  );
+  navigationEventId = Number(navigationEvent.insertId);
+  fixtures.eventIds.push(navigationEventId);
 });
 
 test.afterAll(async () => {
@@ -179,7 +189,85 @@ test('2. Guest login returns to the selected booking page', async ({ browser }) 
   await context.close();
 });
 
-test('3. Book, render/print QR, then cancel and verify inventory and ticket visibility', async ({ browser }) => {
+test('3. Book Event navigation keeps the user logged in and allows booking', async ({ browser }) => {
+  const context = await makeContext(browser);
+  const page = await context.newPage();
+  await login(page, identities.user.email, password);
+  await expect(page).toHaveURL(/dashboard\.html$/);
+  await page.getByRole('navigation', { name: 'User navigation' }).getByRole('link', { name: 'Book Event', exact: true }).click();
+  await expect(page).toHaveURL(/book-event\.html$/);
+  await expect(page.locator('#eventSelect')).toBeVisible();
+
+  const session = await page.evaluate(async (api) => {
+    const response = await fetch(`${api}/auth/me`, { credentials: 'include' });
+    return { status: response.status, user: (await response.json()).data?.user };
+  }, API);
+  expect(session.status).toBe(200);
+  expect(session.user.email).toBe(identities.user.email);
+
+  await page.locator('#eventSelect').selectOption(String(navigationEventId));
+  await expect(page.locator('.page-hero h1')).toHaveText(`E2E Navigation ${tag}`);
+  await page.locator('#bookingForm button[type="submit"]').click();
+  await expect(page).toHaveURL(/booking-confirmation\.html\?booking=\d+/);
+  const bookingId = Number(new URL(page.url()).searchParams.get('booking'));
+  fixtures.bookingIds.push(bookingId);
+  const cancellationStatus = await page.evaluate(async ({ api, id }) => (
+    await fetch(`${api}/bookings/${id}/cancel`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}'
+    })
+  ).status, { api: API, id: bookingId });
+  expect(cancellationStatus).toBe(200);
+  userState = await context.storageState();
+  await context.close();
+});
+
+test('4. Opening the booking page without an event keeps the user logged in', async ({ browser }) => {
+  const context = await makeContext(browser, userState);
+  const page = await context.newPage();
+  await page.goto(`${SITE}/book-event.html`);
+  await expect(page).toHaveURL(`${SITE}/book-event.html`);
+  await expect(page.locator('#eventSelect')).toBeVisible();
+  await expect(page.locator(`#eventSelect option[value="${navigationEventId}"]`)).toHaveCount(1);
+
+  const session = await page.evaluate(async (api) => {
+    const response = await fetch(`${api}/auth/me`, { credentials: 'include' });
+    return { status: response.status, user: (await response.json()).data?.user };
+  }, API);
+  expect(session.status).toBe(200);
+  expect(session.user.email).toBe(identities.user.email);
+  await context.close();
+});
+
+test('5. Non-401 session errors show a message without logging out or redirecting', async ({ browser }) => {
+  const context = await makeContext(browser, userState);
+  const page = await context.newPage();
+  const cases = [
+    { status: 404, message: 'Simulated session endpoint not found.' },
+    { status: 500, message: 'Simulated session service error.' },
+    { status: 0, message: 'Could not reach EventEase.' }
+  ];
+
+  for (const item of cases) {
+    await page.route(`${API}/auth/me`, (route) => item.status
+      ? route.fulfill({ status: item.status, contentType: 'application/json', body: JSON.stringify({ success: false, message: item.message }) })
+      : route.abort());
+    await page.goto(`${SITE}/book-event.html?event=${bookingEventId}`);
+    await expect(page).toHaveURL(`${SITE}/book-event.html?event=${bookingEventId}`);
+    await expect(page.getByRole('alert')).toContainText(item.message);
+    await page.unroute(`${API}/auth/me`);
+
+    const sessionStatus = await page.evaluate(async (api) => (
+      await fetch(`${api}/auth/me`, { credentials: 'include' })
+    ).status, API);
+    expect(sessionStatus).toBe(200);
+  }
+  await context.close();
+});
+
+test('6. Book, render/print QR, then cancel and verify inventory and ticket visibility', async ({ browser }) => {
   const context = await makeContext(browser, userState);
   const page = await context.newPage();
   watchSmokePage(page, 'booking/tickets');
@@ -265,7 +353,7 @@ test('3. Book, render/print QR, then cancel and verify inventory and ticket visi
   await context.close();
 });
 
-test('4. Organizer creates event; admin approves it and it becomes public', async ({ browser }) => {
+test('7. Organizer creates event; admin approves it and it becomes public', async ({ browser }) => {
   const context = await makeContext(browser, organizerState);
   const page = await context.newPage();
   watchSmokePage(page, 'organizer');
@@ -316,7 +404,7 @@ test('4. Organizer creates event; admin approves it and it becomes public', asyn
   console.log(`Core browser smoke: ${applicationConsoleErrors.length} application console errors, ${smokePageErrors.length} uncaught page errors, ${expectedGuestAuth401s.length} expected guest auth 401s, ${blockedRemoteResources.length} blocked remote-resource errors.`);
 });
 
-test('5. Logged-out and wrong-role routes are denied or redirected', async ({ browser }) => {
+test('8. Logged-out and wrong-role routes are denied or redirected', async ({ browser }) => {
   const guestContext = await makeContext(browser);
   const guestPage = await guestContext.newPage();
   await guestPage.goto(`${SITE}/dashboard.html`);
